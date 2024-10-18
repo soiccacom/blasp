@@ -6,18 +6,45 @@ use Exception;
 
 class BlaspService extends BlaspExpressionService
 {
+    /**
+     * The incoming string to check for profanities.
+     *
+     * @var string
+     */
     public string $sourceString;
 
+    /**
+     * The sanitised string with profanities masked.
+     *
+     * @var string
+     */
     public string $cleanString;
 
+    /**
+     * A boolean value indicating if the incoming string
+     * contains any profanities.
+     *
+     * @var bool
+     */
     public bool $hasProfanity = false;
 
+    /**
+     * The number of profanities found in the incoming string.
+     *
+     * @var int
+     */
     public int $profanitiesCount = 0;
 
+    /**
+     * An array of unique profanities found in the incoming string.
+     *
+     * @var array
+     */
     public array $uniqueProfanitiesFound = [];
 
     /**
-     * Blasp constructor.
+     * Initialise the class and parent class.
+     * 
      */
     public function __construct()
     {
@@ -85,6 +112,8 @@ class BlaspService extends BlaspExpressionService
     }
 
     /**
+     * Check if the incoming string contains any profanities.
+     * 
      * @param string $profanity
      * @return bool
      */
@@ -94,6 +123,8 @@ class BlaspService extends BlaspExpressionService
     }
 
     /**
+     * Mask the profanities found in the incoming string.
+     * 
      * @param string $profanity
      * @return string
      */

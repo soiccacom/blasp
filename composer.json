@@ -17,7 +17,7 @@
   ],
   "require": {
     "php": "^7.4|^8.0",
-    "illuminate/support": "^8.0"
+    "illuminate/support": "^8.0|^9.0|^10.0|^11.0"
   },
   "require-dev": {
     "orchestra/testbench": "^6.47",
@@ -25,7 +25,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Blaspsoft\\Blasp\\": "src"
+      "Blaspsoft\\Blasp\\": "src/"
     }
   },
   "autoload-dev": {
@@ -46,7 +46,7 @@
         "Blaspsoft\\Blasp\\ServiceProvider"
       ],
       "aliases": {
-        "Blasp": "Blaspsoft\\Blasp\\Facade\\Blasp"
+        "Blasp": "Blaspsoft\\Blasp\\Facades\\Blasp"
       }
     }
   }

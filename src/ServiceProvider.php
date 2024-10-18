@@ -14,8 +14,12 @@ class ServiceProvider extends BaseServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('blasp.php'),
-            ], 'config');
+            ], 'blasp-config');
         }
+
+        app('validator')->extend('blasp_check', function ($attribute, $value, $parameters, $validator,) {
+            return ! app('blasp')->check($value)->hasProfanity;
+        }, 'The :attribute contains profanity.');
     }
 
     /**
@@ -23,10 +27,10 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'blasp');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'blasp-config');
 
-        $this->app->singleton('blasp', function () {
-            return new BlaspService();
+        $this->app->bind('blasp', function () {
+            return new \Blaspsoft\Blasp\BlaspService();
         });
     }
 }

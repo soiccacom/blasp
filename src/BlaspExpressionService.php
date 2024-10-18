@@ -6,6 +6,8 @@ abstract class BlaspExpressionService
 {
     /**
      * Value used as a the separator placeholder.
+     * 
+     * @var string
      */
     const SEPARATOR_PLACEHOLDER = '{!!}';
 
@@ -144,6 +146,8 @@ abstract class BlaspExpressionService
     }
 
     /**
+     * Generate a regex expression foreach profanity.
+     * 
      * @param $profanity
      * @return string
      */
