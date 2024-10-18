@@ -1,54 +1,53 @@
 {
-    "name": "blaspsoft/blasp",
-    "description": "Blasp is a powerful and customisable profanity filter package for Laravel applications",
-    "keywords": [
-        "blaspsoft",
-        "blasp"
-    ],
-    "homepage": "https://github.com/blaspsoft/blasp",
-    "license": "MIT",
-    "type": "library",
-    "authors": [
-        {
-            "name": "Michael Deeming",
-            "email": "michael.deeming90@gmail.com",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": "^7.4|^8.0",
-        "illuminate/support": "^8.0"
-    },
-    "require-dev": {
-        "orchestra/testbench": "^6.0",
-        "phpunit/phpunit": "^9.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Blaspsoft\\Blasp\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Blaspsoft\\Blasp\\Tests\\": "tests"
-        }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Blaspsoft\\Blasp\\BlaspServiceProvider"
-            ],
-            "aliases": {
-                "Blasp": "Blaspsoft\\Blasp\\BlaspFacade"
-            }
-        }
+  "name": "blaspsoft/blasp",
+  "description": "Blasp is a powerful and customisable profanity filter package for Laravel applications",
+  "keywords": [
+    "blaspsoft",
+    "blasp"
+  ],
+  "homepage": "https://github.com/blaspsoft/blasp",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Michael Deeming",
+      "email": "michael.deeming90@gmail.com",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": "^7.4|^8.0",
+    "illuminate/support": "^8.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^6.47",
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Blaspsoft\\Blasp\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Blaspsoft\\Blasp\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Blaspsoft\\Blasp\\ServiceProvider"
+      ],
+      "aliases": {
+        "Blasp": "Blaspsoft\\Blasp\\Facade\\Blasp"
+      }
+    }
+  }
 }
