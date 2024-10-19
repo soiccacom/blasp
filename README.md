@@ -49,7 +49,7 @@ print_r($check->uniqueProfanitiesFound); // ['fucking', 'shit']
 Blasp can detect different types of profanities based on variations such as:
 
 1. **Straight match**: Direct matches of profane words.
-2. **Substitution**: Substituted characters (e.g., `po0fán1ty`).
+2. **Substitution**: Substituted characters (e.g., `pro0fán1ty`).
 3. **Obscured**: Profanities with separators (e.g., `p-r-o-f-a-n-i-t-y`).
 4. **Doubled**: Repeated letters (e.g., `pprrooffaanniittyy`).
 5. **Combination**: Combinations of the above (e.g., `pp-rof@n|tty`).
