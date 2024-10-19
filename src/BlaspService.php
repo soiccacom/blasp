@@ -99,11 +99,6 @@ class BlaspService extends BlaspExpressionService
                 $this->uniqueProfanitiesFound[] = $profanity;
 
                 $string = $this->generateProfanityReplacement($expression);
-
-                $this->cleanString = (string) preg_replace($expression, $string, $this->cleanString, -1,$count);
-
-                $this->profanitiesCount += $count;
-
             }
 
         }
@@ -131,7 +126,14 @@ class BlaspService extends BlaspExpressionService
     private function generateProfanityReplacement(string $profanity): string
     {
         preg_match_all($profanity, $this->cleanString, $matches, PREG_OFFSET_CAPTURE);
+        
+        foreach ($matches[0] as $match) {
 
-        return str_repeat("*", strlen($matches[0][0][0]));
+            $this->cleanString = substr_replace($this->cleanString, str_repeat("*", mb_strlen($match[0], 'UTF-8')), $match[1], strlen($match[0]));
+
+            $this->profanitiesCount++;
+        }
+
+        return $this->cleanString;
     }
 }

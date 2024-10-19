@@ -1,14 +1,10 @@
-# Very short description of the package
+# Blasp - Profanity Filter for Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/blaspsoft/blasp.svg?style=flat-square)](https://packagist.org/packages/blaspsoft/blasp)
-[![Total Downloads](https://img.shields.io/packagist/dt/blaspsoft/blasp.svg?style=flat-square)](https://packagist.org/packages/blaspsoft/blasp)
-![GitHub Actions](https://github.com/blaspsoft/blasp/actions/workflows/main.yml/badge.svg)
-
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+Blasp is a profanity filter package for Laravel that helps detect and mask profane words in a given sentence. It offers a robust set of features for handling variations of offensive language, including substitutions, obscured characters, and doubled letters.
 
 ## Installation
 
-You can install the package via composer:
+You can install the package via Composer:
 
 ```bash
 composer require blaspsoft/blasp
@@ -16,37 +12,72 @@ composer require blaspsoft/blasp
 
 ## Usage
 
+### Basic Usage
+
+To use the profanity filter, simply call the `Blasp::check()` method with the sentence you want to check for profanity.
+
 ```php
-// Usage description here
+use Blaspsoft\Blasp\Facades\Blasp;
+
+$sentence = 'This is a fucking shit sentence';
+$check = Blasp::check($sentence);
 ```
 
-### Testing
+The returned object will contain the following properties:
+
+- **sourceString**: The original string you passed.
+- **cleanString**: The string with profanities masked (e.g., replaced with `*`).
+- **hasProfanity**: A boolean indicating whether the string contains profanity.
+- **profanitiesCount**: The number of profanities found.
+- **uniqueProfanitiesFound**: An array of unique profanities found in the string.
+
+### Example
+
+```php
+$sentence = 'This is a fucking shit sentence';
+$check = Blasp::check($sentence);
+
+echo $check->sourceString;       // "This is a fucking shit sentence"
+echo $check->cleanString;        // "This is a ******* **** sentence"
+echo $check->hasProfanity;       // true
+echo $check->profanitiesCount;   // 2
+print_r($check->uniqueProfanitiesFound); // ['fucking', 'shit']
+```
+
+### Profanity Detection Types
+
+Blasp can detect different types of profanities based on variations such as:
+
+1. **Straight match**: Direct matches of profane words.
+2. **Substitution**: Substituted characters (e.g., `po0fán1ty`).
+3. **Obscured**: Profanities with separators (e.g., `p-r-o-f-a-n-i-t-y`).
+4. **Doubled**: Repeated letters (e.g., `pprrooffaanniittyy`).
+5. **Combination**: Combinations of the above (e.g., `pp-rof@n|tty`).
+
+### Laravel Validation Rule
+
+Blasp also provides a custom Laravel validation rule called `blasp_check`, which you can use to validate form input for profanity.
+
+#### Example
+
+```php
+$request->merge(['sentence' => 'This is f u c k 1 n g awesome!']);
+
+$validated = $request->validate([
+    'sentence' => ['blasp_check'],
+]);
+
+// If the sentence contains profanities, validation will fail.
+```
+
+### Configuration
+
+Blasp uses a configuration file (`config/blasp.php`) to manage the list of profanities, separators, and substitutions. You can publish the configuration file using the following Artisan command:
 
 ```bash
-composer test
+php artisan vendor:publish --tag="blasp-config"
 ```
-
-### Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-### Security
-
-If you discover any security related issues, please email michael.deeming90@gmail.com instead of using the issue tracker.
-
-## Credits
-
--   [Michael Deeming](https://github.com/blaspsoft)
--   [All Contributors](../../contributors)
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
+Blasp is open-sourced software licensed under the [MIT license](LICENSE).
