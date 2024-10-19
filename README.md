@@ -1,3 +1,5 @@
+![Local Image](./assets/icon.png)
+
 # Blasp - Profanity Filter for Laravel
 
 Blasp is a profanity filter package for Laravel that helps detect and mask profane words in a given sentence. It offers a robust set of features for handling variations of offensive language, including substitutions, obscured characters, and doubled letters.
