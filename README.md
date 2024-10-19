@@ -1,4 +1,4 @@
-![Local Image](./assets/icon.png)
+<img src="./assets/icon.png" alt="Alt text" width="150" height="150"/>
 
 # Blasp - Profanity Filter for Laravel
 
