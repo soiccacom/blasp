@@ -1,6 +1,6 @@
 <?php
 
-namespace Blaspsoft\Blasp\Tests\Unit;
+namespace Blaspsoft\Blasp\Tests;
 
 use Blaspsoft\Blasp\BlaspService;
 use Blaspsoft\Blasp\Tests\TestCase;
