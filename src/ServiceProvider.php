@@ -27,7 +27,7 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'blasp-config');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'blasp');
 
         $this->app->bind('blasp', function () {
             return new \Blaspsoft\Blasp\BlaspService();
