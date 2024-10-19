@@ -33,6 +33,8 @@
       "Blaspsoft\\Blasp\\Tests\\": "tests"
     }
   },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
   "scripts": {
     "test": "vendor/bin/phpunit",
     "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
