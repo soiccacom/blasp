@@ -1,4 +1,9 @@
-<img src="./assets/icon.png" alt="Alt text" width="150" height="150"/>
+<p align="center">
+    <img src="./assets/icon.png" alt="Alt text" width="150" height="150"/>
+    <p align="center">
+        <a href="https://github.com/Blaspsoft/blasp/actions/workflows/main.yml"><img alt="GitHub Workflow Status (main)" src="https://github.com/Blaspsoft/blasp/actions/workflows/main.yml/badge.svg"></a>
+    </p>
+</p>
 
 # Blasp - Profanity Filter for Laravel
 
