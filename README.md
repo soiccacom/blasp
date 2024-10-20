@@ -45,13 +45,13 @@ The returned object will contain the following properties:
 
 ```php
 $sentence = 'This is a fucking shit sentence';
-$check = Blasp::check($sentence);
+$blasp = Blasp::check($sentence);
 
-echo $check->sourceString;       // "This is a fucking shit sentence"
-echo $check->cleanString;        // "This is a ******* **** sentence"
-echo $check->hasProfanity;       // true
-echo $check->profanitiesCount;   // 2
-print_r($check->uniqueProfanitiesFound); // ['fucking', 'shit']
+$blasp->getSourceString();       // "This is a fucking shit sentence"
+$blasp->getCleanString();        // "This is a ******* **** sentence"
+$blasp->hasProfanity();       // true
+$blasp->getProfanitiesCount();   // 2
+$blasp->getUniqueProfanitiesFound(); // ['fucking', 'shit']
 ```
 
 ### Profanity Detection Types
