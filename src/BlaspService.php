@@ -136,4 +136,55 @@ class BlaspService extends BlaspExpressionService
 
         return $this->cleanString;
     }
+
+    /**
+     * Get the incoming string.
+     * 
+     * @return string
+     */
+    public function getSourceString(): string
+    {
+        return $this->sourceString;
+    }
+
+    /**
+     * Get the clean string with profanities masked.
+     * 
+     * @return string
+     */
+    public function getCleanString(): string
+    {
+        return $this->cleanString;
+    }
+
+    /**
+     * Get a boolean value indicating if the incoming
+     * string contains any profanities.
+     * 
+     * @return bool
+     */
+    public function hasProfanity(): bool
+    {
+        return $this->hasProfanity;
+    }
+
+    /**
+     * Get the number of profanities found in the incoming string.
+     * 
+     * @return int
+     */
+    public function getProfanitiesCount(): int
+    {
+        return $this->profanitiesCount;
+    }
+
+    /**
+     * Get the unique profanities found in the incoming string.
+     * 
+     * @return array
+     */
+    public function getUniqueProfanitiesFound(): array
+    {
+        return $this->uniqueProfanitiesFound;
+    }
 }
