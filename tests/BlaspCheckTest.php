@@ -116,6 +116,20 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('This is a ********* sentence', $result->cleanString);
     }
 
+    public function test_multiple_profanities_no_spaces()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('cuntfuck');
+
+        dd($result);
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(2, $result->profanitiesCount);
+        $this->assertCount(2, $result->uniqueProfanitiesFound);
+        $this->assertSame('********', $result->cleanString);
+    }
+
     public function test_multiple_profanities()
     {
         $blaspService = new BlaspService();
@@ -126,6 +140,18 @@ class BlaspCheckTests extends TestCase
         $this->assertSame(3, $result->profanitiesCount);
         $this->assertCount(2, $result->uniqueProfanitiesFound);
         $this->assertSame('This is a ********* sentence you ******* ****!', $result->cleanString);
+    }
+
+    public function test_scunthorpe_problem()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('I live in a town called Scunthorpe');
+
+        $this->assertTrue(!$result->hasProfanity);
+        $this->assertSame(0, $result->profanitiesCount);
+        $this->assertCount(0, $result->uniqueProfanitiesFound);
+        $this->assertSame('I live in a town called Scunthorpe', $result->cleanString);
     }
 
 }
