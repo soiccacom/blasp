@@ -14,7 +14,7 @@ class BlaspCheckTests extends TestCase
     {
         parent::setUp();
 
-        Config::set('blasp.profanities', ['fucking', 'shit', 'cunt', 'fuck', 'penis', 'cock', 'twat', 'ass', 'dick', 'sex', 'butt', 'arse', 'lick', 'anal']);
+        Config::set('blasp.profanities', ['fucking', 'shit', 'cunt', 'fuck', 'penis', 'cock', 'twat', 'ass', 'dick', 'sex', 'butt', 'arse', 'lick', 'anal', 'clusterfuck', 'bullshit', 'fucked', 'damn', 'crap', 'hell']);
         Config::set('blasp.separators', [' ', '-', '_']);
         Config::set('blasp.substitutions', [
             '/a/' => ['a', '4', '@', 'Á', 'á', 'À', 'Â', 'à', 'Â', 'â', 'Ä', 'ä', 'Ã', 'ã', 'Å', 'å', 'æ', 'Æ', 'α', 'Δ', 'Λ', 'λ'],
@@ -238,4 +238,19 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('oi! ****!', $result->cleanString);
     }
 
+    public function test_paragraph()
+    {
+        $blaspService = new BlaspService();
+
+        $paragraph = "This damn project is such a pain in the ass. I can't believe I have to deal with this bullshit every single day. It's like everything is completely fucked up, and nobody gives a shit. Sometimes I just want to scream, 'What the hell is going on?' Honestly, it's a total clusterfuck, and I'm so fucking done with this crap.";
+        
+        $result = $blaspService->check($paragraph);
+
+        $expectedOutcome = "This **** project is such a pain in the ***. I can't believe I have to deal with this ******** every single day. It's like everything is completely ****** up, and nobody gives a ****. Sometimes I just want to scream, 'What the **** is going on?' Honestly, it's a total ***********, and I'm so ******* done with this ****.";
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(9, $result->profanitiesCount);
+        $this->assertCount(9, $result->uniqueProfanitiesFound);
+        $this->assertSame($expectedOutcome, $result->cleanString);
+    }
 }
