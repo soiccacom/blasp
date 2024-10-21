@@ -11,14 +11,14 @@ class BlaspService extends BlaspExpressionService
      *
      * @var string
      */
-    public string $sourceString;
+    public string $sourceString = '';
 
     /**
      * The sanitised string with profanities masked.
      *
      * @var string
      */
-    public string $cleanString;
+    public string $cleanString = '';
 
     /**
      * A boolean value indicating if the incoming string
@@ -81,40 +81,53 @@ class BlaspService extends BlaspExpressionService
      */
     private function handle(): self
     {
-        foreach ($this->profanityExpressions as $profanity => $expression) {
+        // Convert false positives to lowercase for case-insensitive comparison
+        $falsePositives = array_map('strtolower', config('blasp.false_positives'));
+        $continue = true;
 
-            /**
-             * Skip if profanity ends with s as this
-             * will be picked up using regex.
-             **/
-            /*if(substr($profanity, -1) == 's') {
+        // Sort profanities by length (longer first) to match longer profanities first
+        uksort($this->profanityExpressions, function($a, $b) {
+            return strlen($b) - strlen($a);  // Sort by length, descending
+        });
 
-                continue;
-            }*/
+        // Loop through until no more profanities are detected
+        while ($continue) {
+            $continue = false;
 
-            if($this->stringHasProfanity($expression)) {
+            foreach ($this->profanityExpressions as $profanity => $expression) {
+                preg_match_all($expression, $this->cleanString, $matches, PREG_OFFSET_CAPTURE);
 
-                $this->hasProfanity = true;
+                if (!empty($matches[0])) {
+                    foreach ($matches[0] as $match) {
+                        // Get the start and length of the match
+                        $start = $match[1];
+                        $length = strlen($match[0]);
 
-                $this->uniqueProfanitiesFound[] = $profanity;
+                        // Use boundaries to extract the full word around the match
+                        $fullWord = $this->getFullWordContext($this->cleanString, $start, $length);
 
-                $string = $this->generateProfanityReplacement($expression);
+                        // Check if the full word (in lowercase) is in the false positives list
+                        if (in_array(strtolower($fullWord), $falsePositives, true)) {
+                            continue;  // Skip checking this word if it's a false positive
+                        }
+
+                        $continue = true;  // Continue if we find any profanities
+
+                        $this->hasProfanity = true;
+
+                        // Replace the found profanity
+                        $this->generateProfanityReplacement($match);
+
+                        // Avoid adding duplicates to the unique list
+                        if (!in_array($profanity, $this->uniqueProfanitiesFound)) {
+                            $this->uniqueProfanitiesFound[] = $profanity;
+                        }
+                    }
+                }
             }
-
         }
 
         return $this;
-    }
-
-    /**
-     * Check if the incoming string contains any profanities.
-     * 
-     * @param string $profanity
-     * @return bool
-     */
-    private function stringHasProfanity(string $profanity): bool
-    {
-        return preg_match($profanity, $this->cleanString) === 1;
     }
 
     /**
@@ -123,19 +136,49 @@ class BlaspService extends BlaspExpressionService
      * @param string $profanity
      * @return string
      */
-    private function generateProfanityReplacement(string $profanity): string
+    private function generateProfanityReplacement(array $match): void
     {
-        preg_match_all($profanity, $this->cleanString, $matches, PREG_OFFSET_CAPTURE);
-        
-        foreach ($matches[0] as $match) {
+        $start = $match[1]; // Starting position of the profanity
+        $length = mb_strlen($match[0], 'UTF-8'); // Length of the profanity
+        $replacement = str_repeat("*", $length); // Mask with asterisks
 
-            $this->cleanString = substr_replace($this->cleanString, str_repeat("*", mb_strlen($match[0], 'UTF-8')), $match[1], strlen($match[0]));
+        // Replace only the profanity in the cleanString, preserving the original case and spaces
+        $this->cleanString = mb_substr($this->cleanString, 0, $start) . 
+                            $replacement . 
+                            mb_substr($this->cleanString, $start + $length);
 
-            $this->profanitiesCount++;
+        // Increment profanity count
+        $this->profanitiesCount++;
+    }
+
+    /**
+     * Get the full word context surrounding the matched profanity.
+     * 
+     * @param string $string
+     * @param int $start
+     * @param int $length
+     * @return string
+     */
+    private function getFullWordContext(string $string, int $start, int $length): string
+    {
+        // Define word boundaries (spaces, punctuation, etc.)
+        $left = $start;
+        $right = $start + $length;
+
+        // Move the left pointer backwards to find the start of the full word
+        while ($left > 0 && preg_match('/\w/', $string[$left - 1])) {
+            $left--;
         }
 
-        return $this->cleanString;
+        // Move the right pointer forwards to find the end of the full word
+        while ($right < strlen($string) && preg_match('/\w/', $string[$right])) {
+            $right++;
+        }
+
+        // Return the full word surrounding the matched profanity
+        return substr($string, $left, $right - $left);
     }
+
 
     /**
      * Get the incoming string.

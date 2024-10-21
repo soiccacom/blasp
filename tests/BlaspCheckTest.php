@@ -14,7 +14,7 @@ class BlaspCheckTests extends TestCase
     {
         parent::setUp();
 
-        Config::set('blasp.profanities', ['fucking', 'shit', 'cunt', 'fuck']);
+        Config::set('blasp.profanities', ['fucking', 'shit', 'cunt', 'fuck', 'penis', 'cock', 'twat', 'ass', 'dick', 'sex', 'butt', 'arse', 'lick', 'anal', 'clusterfuck', 'bullshit', 'fucked', 'damn', 'crap', 'hell']);
         Config::set('blasp.separators', [' ', '-', '_']);
         Config::set('blasp.substitutions', [
             '/a/' => ['a', '4', '@', 'Á', 'á', 'À', 'Â', 'à', 'Â', 'â', 'Ä', 'ä', 'Ã', 'ã', 'Å', 'å', 'æ', 'Æ', 'α', 'Δ', 'Λ', 'λ'],
@@ -116,6 +116,18 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('This is a ********* sentence', $result->cleanString);
     }
 
+    public function test_multiple_profanities_no_spaces()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('cuntfuck shit');
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(3, $result->profanitiesCount);
+        $this->assertCount(3, $result->uniqueProfanitiesFound);
+        $this->assertSame('******** ****', $result->cleanString);
+    }
+
     public function test_multiple_profanities()
     {
         $blaspService = new BlaspService();
@@ -128,4 +140,117 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('This is a ********* sentence you ******* ****!', $result->cleanString);
     }
 
+    public function test_scunthorpe_problem()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('I live in a town called Scunthorpe');
+
+        $this->assertTrue(!$result->hasProfanity);
+        $this->assertSame(0, $result->profanitiesCount);
+        $this->assertCount(0, $result->uniqueProfanitiesFound);
+        $this->assertSame('I live in a town called Scunthorpe', $result->cleanString);
+    }
+
+    public function test_penistone_problem()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('I live in a town called Penistone');
+
+        $this->assertTrue(!$result->hasProfanity);
+        $this->assertSame(0, $result->profanitiesCount);
+        $this->assertCount(0, $result->uniqueProfanitiesFound);
+        $this->assertSame('I live in a town called Penistone', $result->cleanString);
+    }
+
+    public function test_false_positives()
+    {
+        $words = [
+            'Scunthorpe',
+            'Cockburn',
+            'Penistone',
+            'Lightwater',
+            'Assume',
+            'bass',
+            'class',
+            'Compass',
+            'Pass',
+            'Dickinson',
+            'Middlesex',
+            'Cockerel',
+            'Butterscotch',
+            'Blackcock',
+            'Countryside',
+            'Arsenal',
+            'Flick',
+            'Flicker',
+            'Analyst',
+            'blackCocktail',
+        ];
+
+        foreach ($words as $word) {
+
+            $blaspService = new BlaspService();
+            
+            $result = $blaspService->check($word);
+
+            $this->assertTrue(!$result->hasProfanity);
+            $this->assertSame(0, $result->profanitiesCount);
+            $this->assertCount(0, $result->uniqueProfanitiesFound);
+            $this->assertSame($word, $result->cleanString);       
+        }
+    }
+
+    public function test_cuntfuck_fuckcunt()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('cuntfuck fuckcunt');
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(4, $result->profanitiesCount);
+        $this->assertCount(2, $result->uniqueProfanitiesFound);
+        $this->assertSame('******** ********', $result->cleanString);
+    }
+
+    public function test_fucking_shit_cunt_fuck()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('fuckingshitcuntfuck');
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(4, $result->profanitiesCount);
+        $this->assertCount(4, $result->uniqueProfanitiesFound);
+        $this->assertSame('*******************', $result->cleanString);
+    }
+
+    public function test_billy_butcher()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('oi! cunt!');
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(1, $result->profanitiesCount);
+        $this->assertCount(1, $result->uniqueProfanitiesFound);
+        $this->assertSame('oi! ****!', $result->cleanString);
+    }
+
+    public function test_paragraph()
+    {
+        $blaspService = new BlaspService();
+
+        $paragraph = "This damn project is such a pain in the ass. I can't believe I have to deal with this bullshit every single day. It's like everything is completely fucked up, and nobody gives a shit. Sometimes I just want to scream, 'What the hell is going on?' Honestly, it's a total clusterfuck, and I'm so fucking done with this crap.";
+        
+        $result = $blaspService->check($paragraph);
+
+        $expectedOutcome = "This **** project is such a pain in the ***. I can't believe I have to deal with this ******** every single day. It's like everything is completely ****** up, and nobody gives a ****. Sometimes I just want to scream, 'What the **** is going on?' Honestly, it's a total ***********, and I'm so ******* done with this ****.";
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(9, $result->profanitiesCount);
+        $this->assertCount(9, $result->uniqueProfanitiesFound);
+        $this->assertSame($expectedOutcome, $result->cleanString);
+    }
 }
