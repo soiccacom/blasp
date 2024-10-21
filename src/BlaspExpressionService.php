@@ -90,6 +90,7 @@ abstract class BlaspExpressionService
     private function generateSeparatorExpression(): string
     {
         return $this->generateEscapedExpression($this->separators, $this->escapedSeparatorCharacters);
+        return !empty($separatorExpression) ? $separatorExpression . '?' : '';
     }
 
     /**
@@ -101,7 +102,7 @@ abstract class BlaspExpressionService
 
         foreach ($this->substitutions as $character => $substitutions) {
 
-            $characterExpressions[$character] = $this->generateEscapedExpression($substitutions, [], '+?') . self::SEPARATOR_PLACEHOLDER;
+            $characterExpressions[$character] = $this->generateEscapedExpression($substitutions, [], '+') . self::SEPARATOR_PLACEHOLDER;
         }
 
         return $characterExpressions;
@@ -118,7 +119,6 @@ abstract class BlaspExpressionService
         $regex = $escapedCharacters;
 
         foreach ($characters as $character) {
-
             $regex[] = preg_quote($character, '/');
         }
 
@@ -138,11 +138,6 @@ abstract class BlaspExpressionService
 
             $this->profanityExpressions[$this->profanities[$i]] = $this->generateProfanityExpression($this->profanities[$i]);
         }
-
-        uksort($this->profanityExpressions, function($a, $b) {
-
-            return strlen($b) - strlen($a);
-        });
     }
 
     /**
@@ -153,8 +148,12 @@ abstract class BlaspExpressionService
      */
     private function generateProfanityExpression($profanity): string
     {
-        $expression = '/' . preg_replace(array_keys($this->characterExpressions), array_values($this->characterExpressions), $profanity) . '(?:s?)?\b/i';
+        $expression = preg_replace(array_keys($this->characterExpressions), array_values($this->characterExpressions), $profanity);
 
-        return str_replace(self::SEPARATOR_PLACEHOLDER, $this->separatorExpression, $expression);
+        $expression = str_replace(self::SEPARATOR_PLACEHOLDER, $this->separatorExpression, $expression);
+
+        $expression = '/' . $expression . '(?:s?)\b/i';
+
+        return $expression;
     }
 }

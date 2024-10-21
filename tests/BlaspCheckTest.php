@@ -14,7 +14,7 @@ class BlaspCheckTests extends TestCase
     {
         parent::setUp();
 
-        Config::set('blasp.profanities', ['fucking', 'shit', 'cunt', 'fuck']);
+        Config::set('blasp.profanities', ['fucking', 'shit', 'cunt', 'fuck', 'penis', 'cock', 'twat', 'ass', 'dick', 'sex', 'butt', 'arse', 'lick', 'anal']);
         Config::set('blasp.separators', [' ', '-', '_']);
         Config::set('blasp.substitutions', [
             '/a/' => ['a', '4', '@', 'Á', 'á', 'À', 'Â', 'à', 'Â', 'â', 'Ä', 'ä', 'Ã', 'ã', 'Å', 'å', 'æ', 'Æ', 'α', 'Δ', 'Λ', 'λ'],
@@ -120,14 +120,12 @@ class BlaspCheckTests extends TestCase
     {
         $blaspService = new BlaspService();
         
-        $result = $blaspService->check('cuntfuck');
-
-        dd($result);
+        $result = $blaspService->check('cuntfuck shit');
 
         $this->assertTrue($result->hasProfanity);
-        $this->assertSame(2, $result->profanitiesCount);
-        $this->assertCount(2, $result->uniqueProfanitiesFound);
-        $this->assertSame('********', $result->cleanString);
+        $this->assertSame(3, $result->profanitiesCount);
+        $this->assertCount(3, $result->uniqueProfanitiesFound);
+        $this->assertSame('******** ****', $result->cleanString);
     }
 
     public function test_multiple_profanities()
@@ -152,6 +150,92 @@ class BlaspCheckTests extends TestCase
         $this->assertSame(0, $result->profanitiesCount);
         $this->assertCount(0, $result->uniqueProfanitiesFound);
         $this->assertSame('I live in a town called Scunthorpe', $result->cleanString);
+    }
+
+    public function test_penistone_problem()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('I live in a town called Penistone');
+
+        $this->assertTrue(!$result->hasProfanity);
+        $this->assertSame(0, $result->profanitiesCount);
+        $this->assertCount(0, $result->uniqueProfanitiesFound);
+        $this->assertSame('I live in a town called Penistone', $result->cleanString);
+    }
+
+    public function test_false_positives()
+    {
+        $words = [
+            'Scunthorpe',
+            'Cockburn',
+            'Penistone',
+            'Lightwater',
+            'Assume',
+            'bass',
+            'class',
+            'Compass',
+            'Pass',
+            'Dickinson',
+            'Middlesex',
+            'Cockerel',
+            'Butterscotch',
+            'Blackcock',
+            'Countryside',
+            'Arsenal',
+            'Flick',
+            'Flicker',
+            'Analyst',
+            'blackCocktail',
+        ];
+
+        foreach ($words as $word) {
+
+            $blaspService = new BlaspService();
+            
+            $result = $blaspService->check($word);
+
+            $this->assertTrue(!$result->hasProfanity);
+            $this->assertSame(0, $result->profanitiesCount);
+            $this->assertCount(0, $result->uniqueProfanitiesFound);
+            $this->assertSame($word, $result->cleanString);       
+        }
+    }
+
+    public function test_cuntfuck_fuckcunt()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('cuntfuck fuckcunt');
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(4, $result->profanitiesCount);
+        $this->assertCount(2, $result->uniqueProfanitiesFound);
+        $this->assertSame('******** ********', $result->cleanString);
+    }
+
+    public function test_fucking_shit_cunt_fuck()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('fuckingshitcuntfuck');
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(4, $result->profanitiesCount);
+        $this->assertCount(4, $result->uniqueProfanitiesFound);
+        $this->assertSame('*******************', $result->cleanString);
+    }
+
+    public function test_billy_butcher()
+    {
+        $blaspService = new BlaspService();
+        
+        $result = $blaspService->check('oi! cunt!');
+
+        $this->assertTrue($result->hasProfanity);
+        $this->assertSame(1, $result->profanitiesCount);
+        $this->assertCount(1, $result->uniqueProfanitiesFound);
+        $this->assertSame('oi! ****!', $result->cleanString);
     }
 
 }

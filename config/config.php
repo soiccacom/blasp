@@ -85,6 +85,39 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | False Positives
+    |--------------------------------------------------------------------------
+    |
+    | An array of false positives
+    |
+    |
+    */
+    'false_positives' => [
+        'scunthorpe',
+        'cockburn',
+        'penistone',
+        'lightwater',
+        'assume',
+        'bass',
+        'class',
+        'compass',
+        'pass',
+        'dickinson',
+        'middlesex',
+        'cockerel',
+        'butterscotch',
+        'blackcock',
+        'countryside',
+        'arsenal',
+        'flick',
+        'flicker',
+        'analyst',
+        'cocktail',
+    ],
+    
+
+    /*
+    |--------------------------------------------------------------------------
     | Profanities
     |--------------------------------------------------------------------------
     |
