@@ -83,16 +83,7 @@ class BlaspService extends BlaspExpressionService
     {
         foreach ($this->profanityExpressions as $profanity => $expression) {
 
-            /**
-             * Skip if profanity ends with s as this
-             * will be picked up using regex.
-             **/
-            /*if(substr($profanity, -1) == 's') {
-
-                continue;
-            }*/
-
-            if($this->stringHasProfanity($expression)) {
+            while ($this->stringHasProfanity($expression)) {
 
                 $this->hasProfanity = true;
 
@@ -100,7 +91,7 @@ class BlaspService extends BlaspExpressionService
                     $this->uniqueProfanitiesFound[] = $profanity;
                 }
 
-                $string = $this->generateProfanityReplacement($expression);
+                $this->generateProfanityReplacement($expression);
             }
 
         }
