@@ -96,7 +96,9 @@ class BlaspService extends BlaspExpressionService
 
                 $this->hasProfanity = true;
 
-                $this->uniqueProfanitiesFound[] = $profanity;
+                if (!in_array($profanity, $this->uniqueProfanitiesFound)) {
+                    $this->uniqueProfanitiesFound[] = $profanity;
+                }
 
                 $string = $this->generateProfanityReplacement($expression);
             }
