@@ -61,8 +61,24 @@ abstract class BlaspExpressionService
      */
     protected array $characterExpressions;
 
-    public function __construct()
+    /**
+     * Language the package should use
+     *
+     * @var string|null
+     */
+    protected ?string $language;
+
+    /**
+     * An array of false positive expressions
+     *
+     * @var array
+     */
+    protected array $falsePositives;
+
+    public function __construct(?string $language = null)
     {
+        $this->language = $language;
+
         $this->loadConfiguration();
 
         $this->separatorExpression = $this->generateSeparatorExpression();
@@ -70,6 +86,8 @@ abstract class BlaspExpressionService
         $this->characterExpressions = $this->generateSubstitutionExpression();
 
         $this->generateProfanityExpressionArray();
+
+        $this->generateFalsePositiveExpressionArray();
     }
 
     /**
@@ -77,9 +95,13 @@ abstract class BlaspExpressionService
      * from config file.
      *
      */
-    private function loadConfiguration()
+    private function loadConfiguration(): void
     {
-        $this->profanities = config('blasp.profanities');
+        if (empty($this->language)){
+            $this->language = config('blasp.default_language');
+        }
+
+        $this->profanities = config('blasp.profanities')[$this->language];
         $this->separators = config('blasp.separators');
         $this->substitutions = config('blasp.substitutions');
     }
@@ -130,7 +152,7 @@ abstract class BlaspExpressionService
      * and order the array longest to shortest.
      *
      */
-    private function generateProfanityExpressionArray()
+    private function generateProfanityExpressionArray(): void
     {
         $profanityCount = count($this->profanities);
 
@@ -155,5 +177,10 @@ abstract class BlaspExpressionService
         $expression = '/' . $expression . '(?:s?)\b/i';
 
         return $expression;
+    }
+
+    private function generateFalsePositiveExpressionArray(): void
+    {
+        $this->falsePositives = array_map('strtolower', config('blasp.false_positives')[$this->language]);
     }
 }
