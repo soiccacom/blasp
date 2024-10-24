@@ -1477,14 +1477,11 @@ return [
    | Languages
    |--------------------------------------------------------------------------
    |
-   | An array of language
+   | Define the default language
    |
    |
    */
-    'languages' => [
-        'en',
-        'fr',
-    ]
+    'default_language' => 'en',
 
 
 ];
