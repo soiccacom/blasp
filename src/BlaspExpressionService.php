@@ -179,6 +179,11 @@ abstract class BlaspExpressionService
         return $expression;
     }
 
+    /**
+     * Generate an array of false positive expressions.
+     *
+     * @return void
+     */
     private function generateFalsePositiveExpressionArray(): void
     {
         $this->falsePositives = array_map('strtolower', config('blasp.false_positives')[$this->language]);
