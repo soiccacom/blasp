@@ -51,15 +51,29 @@ class BlaspService extends BlaspExpressionService
     protected ?string $language;
 
     /**
+     * Profanity detector instance.
+     *
+     * @var ProfanityDetector
+     */
+    private ProfanityDetector $profanityDetector;
+
+    /**
+     * String normalizer instance.
+     *
+     * @var StringNormalizer
+     */
+    private StringNormalizer $stringNormalizer;
+
+    /**
      * Initialise the class and parent class.
      *
      */
     public function __construct(?string $language = null)
     {
         $this->language = $language;
-
         parent::__construct($language);
-
+        $this->profanityDetector = new ProfanityDetector($this->profanityExpressions, $this->falsePositives);
+        $this->stringNormalizer = new StringNormalizer($language);
         return $this;
     }
 
@@ -96,20 +110,13 @@ class BlaspService extends BlaspExpressionService
         $continue = true;
 
         $normalizedString = $this->cleanString;
-        if ($this->language === 'fr') {
-            $normalizedString = $this->replaceSpecialChars($this->cleanString);
-        }
-        // Sort profanities by length (longer first) to match longer profanities first
-        uksort($this->profanityExpressions, function($a, $b) {
-            return strlen($b) - strlen($a);  // Sort by length, descending
-        });
+        $normalizedString = $this->stringNormalizer->normalize($normalizedString);
 
         // Loop through until no more profanities are detected
         while ($continue) {
             $continue = false;
-            $previousNormalizedString = $normalizedString;
             $normalizedString = preg_replace('/\s+/', ' ', $normalizedString);
-            foreach ($this->profanityExpressions as $profanity => $expression) {
+            foreach ($this->profanityDetector->getProfanityExpressions() as $profanity => $expression) {
                 preg_match_all($expression, $normalizedString, $matches, PREG_OFFSET_CAPTURE);
 
                 if (!empty($matches[0])) {
@@ -122,7 +129,7 @@ class BlaspService extends BlaspExpressionService
                         $fullWord = $this->getFullWordContext($normalizedString, $start, $length);
 
                         // Check if the full word (in lowercase) is in the false positives list
-                        if (in_array(strtolower($fullWord), $this->falsePositives, true)) {
+                        if ($this->profanityDetector->isFalsePositive($fullWord)) {
                             continue;  // Skip checking this word if it's a false positive
                         }
 
