@@ -71,15 +71,16 @@ class BlaspService extends BlaspExpressionService
     public function __construct(?string $language = null)
     {
         $this->language = $language;
+
         parent::__construct($language);
+
         $this->profanityDetector = new ProfanityDetector($this->profanityExpressions, $this->falsePositives);
+
         $this->stringNormalizer = new StringNormalizer($language);
-        return $this;
     }
 
     /**
      * @param string $string
-     * @param string $language
      * @return $this
      * @throws Exception
      */
@@ -109,8 +110,8 @@ class BlaspService extends BlaspExpressionService
     {
         $continue = true;
 
-        $normalizedString = $this->cleanString;
-        $normalizedString = $this->stringNormalizer->normalize($normalizedString);
+        $stringToNormalize = $this->cleanString;
+        $normalizedString = $this->stringNormalizer->normalize($stringToNormalize);
 
         // Loop through until no more profanities are detected
         while ($continue) {
@@ -138,7 +139,7 @@ class BlaspService extends BlaspExpressionService
                         $this->hasProfanity = true;
 
                         // Replace the found profanity
-                        $this->generateProfanityReplacement((array)$match);
+                        $this->generateProfanityReplacement((array) $match);
 
                         $normalizedString = substr_replace($normalizedString, str_repeat('*', $length), $start, $length);
 
@@ -252,17 +253,5 @@ class BlaspService extends BlaspExpressionService
     public function getUniqueProfanitiesFound(): array
     {
         return $this->uniqueProfanitiesFound;
-    }
-
-    private function replaceSpecialChars(string $cleanString): string
-    {
-        $substitution = config('blasp.substitutions');
-        foreach ($substitution as $replacementWithSlashes => $chars) {
-            $replacement = trim($replacementWithSlashes, '/');
-            $pattern = '/\b[' . implode('', array_map('preg_quote', $chars)) . ']\b/u';
-            $cleanString = preg_replace($pattern, $replacement, $cleanString);
-        }
-
-        return $cleanString;
     }
 }
