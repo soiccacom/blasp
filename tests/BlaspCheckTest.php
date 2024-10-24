@@ -3,7 +3,7 @@
 namespace Blaspsoft\Blasp\Tests;
 
 use Blaspsoft\Blasp\BlaspService;
-use Blaspsoft\Blasp\Tests\TestCase;
+use Exception;
 use Illuminate\Support\Facades\Config;
 
 class BlaspCheckTests extends TestCase
@@ -47,6 +47,9 @@ class BlaspCheckTests extends TestCase
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_real_blasp_service()
     {
         $blaspService = new BlaspService();
@@ -56,6 +59,9 @@ class BlaspCheckTests extends TestCase
         $this->assertTrue($result->hasProfanity);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_straight_match()
     {
         $blaspService = new BlaspService();
@@ -68,6 +74,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('This is a ******* sentence', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_substitution_match()
     {
         $blaspService = new BlaspService();
@@ -80,6 +89,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('This is a ******* sentence', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_obscured_match()
     {
         $blaspService = new BlaspService();
@@ -92,6 +104,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('This is a ************* sentence', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_doubled_match()
     {
         $blaspService = new BlaspService();
@@ -104,6 +119,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('This is a ************** sentence', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_combination_match()
     {
         $blaspService = new BlaspService();
@@ -116,6 +134,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('This is a ********* sentence', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_multiple_profanities_no_spaces()
     {
         $blaspService = new BlaspService();
@@ -128,6 +149,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('******** ****', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_multiple_profanities()
     {
         $blaspService = new BlaspService();
@@ -140,6 +164,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('This is a ********* sentence you ******* ****!', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_scunthorpe_problem()
     {
         $blaspService = new BlaspService();
@@ -152,6 +179,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('I live in a town called Scunthorpe', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_penistone_problem()
     {
         $blaspService = new BlaspService();
@@ -164,6 +194,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('I live in a town called Penistone', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_false_positives()
     {
         $words = [
@@ -202,6 +235,9 @@ class BlaspCheckTests extends TestCase
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_cuntfuck_fuckcunt()
     {
         $blaspService = new BlaspService();
@@ -214,6 +250,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('******** ********', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_fucking_shit_cunt_fuck()
     {
         $blaspService = new BlaspService();
@@ -226,6 +265,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('*******************', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_billy_butcher()
     {
         $blaspService = new BlaspService();
@@ -238,6 +280,9 @@ class BlaspCheckTests extends TestCase
         $this->assertSame('oi! ****!', $result->cleanString);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_paragraph()
     {
         $blaspService = new BlaspService();

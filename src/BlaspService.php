@@ -43,8 +43,15 @@ class BlaspService extends BlaspExpressionService
     public array $uniqueProfanitiesFound = [];
 
     /**
+     * Language of the text passed as a parameter
+     *
+     * @var string
+     */
+    public string $language;
+
+    /**
      * Initialise the class and parent class.
-     * 
+     *
      */
     public function __construct()
     {
@@ -54,10 +61,11 @@ class BlaspService extends BlaspExpressionService
 
     /**
      * @param string $string
+     * @param string $language
      * @return $this
      * @throws Exception
      */
-    public function check(string $string): self
+    public function check(string $string, string $language = 'en'): self
     {
         if (empty($string)) {
 
@@ -67,6 +75,8 @@ class BlaspService extends BlaspExpressionService
         $this->sourceString = $string;
 
         $this->cleanString = $string;
+
+        $this->language = $language;
 
         $this->handle();
 
@@ -82,7 +92,7 @@ class BlaspService extends BlaspExpressionService
     private function handle(): self
     {
         // Convert false positives to lowercase for case-insensitive comparison
-        $falsePositives = array_map('strtolower', config('blasp.false_positives'));
+        $falsePositives = array_map('strtolower', config('blasp.false_positives')[$this->language]);
         $continue = true;
 
         // Sort profanities by length (longer first) to match longer profanities first
@@ -116,7 +126,7 @@ class BlaspService extends BlaspExpressionService
                         $this->hasProfanity = true;
 
                         // Replace the found profanity
-                        $this->generateProfanityReplacement($match);
+                        $this->generateProfanityReplacement((array)$match);
 
                         // Avoid adding duplicates to the unique list
                         if (!in_array($profanity, $this->uniqueProfanitiesFound)) {
@@ -132,9 +142,9 @@ class BlaspService extends BlaspExpressionService
 
     /**
      * Mask the profanities found in the incoming string.
-     * 
-     * @param string $profanity
-     * @return string
+     *
+     * @param array $match
+     * @return void
      */
     private function generateProfanityReplacement(array $match): void
     {
@@ -142,10 +152,8 @@ class BlaspService extends BlaspExpressionService
         $length = mb_strlen($match[0], 'UTF-8'); // Length of the profanity
         $replacement = str_repeat("*", $length); // Mask with asterisks
 
-        // Replace only the profanity in the cleanString, preserving the original case and spaces
-        $this->cleanString = mb_substr($this->cleanString, 0, $start) . 
-                            $replacement . 
-                            mb_substr($this->cleanString, $start + $length);
+        // Ensure we're replacing only the matched portion of the cleanString
+        $this->cleanString = substr_replace($this->cleanString, $replacement, $start, $length);
 
         // Increment profanity count
         $this->profanitiesCount++;
@@ -153,7 +161,7 @@ class BlaspService extends BlaspExpressionService
 
     /**
      * Get the full word context surrounding the matched profanity.
-     * 
+     *
      * @param string $string
      * @param int $start
      * @param int $length
@@ -182,7 +190,7 @@ class BlaspService extends BlaspExpressionService
 
     /**
      * Get the incoming string.
-     * 
+     *
      * @return string
      */
     public function getSourceString(): string
@@ -192,7 +200,7 @@ class BlaspService extends BlaspExpressionService
 
     /**
      * Get the clean string with profanities masked.
-     * 
+     *
      * @return string
      */
     public function getCleanString(): string
@@ -203,7 +211,7 @@ class BlaspService extends BlaspExpressionService
     /**
      * Get a boolean value indicating if the incoming
      * string contains any profanities.
-     * 
+     *
      * @return bool
      */
     public function hasProfanity(): bool
@@ -213,7 +221,7 @@ class BlaspService extends BlaspExpressionService
 
     /**
      * Get the number of profanities found in the incoming string.
-     * 
+     *
      * @return int
      */
     public function getProfanitiesCount(): int
@@ -223,7 +231,7 @@ class BlaspService extends BlaspExpressionService
 
     /**
      * Get the unique profanities found in the incoming string.
-     * 
+     *
      * @return array
      */
     public function getUniqueProfanitiesFound(): array
