@@ -27,7 +27,7 @@ class ProfanityDetector
     }
 
     /**
-     *  return an array containing all profanities, substitutions
+     *  Return an array containing all profanities, substitutions
      *  and separator variants.
      *
      * @return array
@@ -42,7 +42,7 @@ class ProfanityDetector
     }
 
     /**
-     * determine if an expression is a false positive
+     * Determine if an expression is a false positive
      *
      * @param string $word
      * @return bool
