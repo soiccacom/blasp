@@ -2,7 +2,7 @@
 
 namespace Blaspsoft\Blasp;
 
-use _PHPStan_c875e8309\Nette\Neon\Exception;
+use Exception;
 
 abstract class BlaspExpressionService
 {
