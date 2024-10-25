@@ -17,6 +17,16 @@ class BlaspCheckFrenchTest extends TestCase
         $this->blaspService = new BlaspService('fr');
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testInvalidLanguage():void
+    {
+        $this->expectExceptionMessage('Unsupported language.');
+        $blaspService = new BlaspService('es');
+        $blaspService->check('This for test the language');
+    }
+
     public function french_test_data_provider(): array
     {
         return [

@@ -24,6 +24,7 @@ abstract class TestCase extends BaseTestCase
             'fr' => ['putain', 'connasse', 'c0nn4ss3', 'putain', 'connard', 'merdique', 'bordel', 'foutre', 'Putain', 'merde']]);
         Config::set('blasp.false_positives', ['fr' => ['passeur', 'classe'], 'en' => ['Scunthorpe', 'Cockburn', 'Penistone', 'Lightwater', 'Assume', 'bass', 'class', 'Compass', 'Pass',
             'Dickinson', 'Middlesex', 'Cockerel', 'Butterscotch', 'Blackcock', 'Countryside', 'Arsenal', 'Flick', 'Flicker', 'Analyst', 'blackCocktail',]]);
+        Config::set('blasp.languages', ['en', 'fr']);
         Config::set('blasp.separators', [' ', '-', '_']);
         Config::set('blasp.substitutions', [
             '/a/' => ['a', '4', '@', 'Á', 'á', 'À', 'Â', 'à', 'Â', 'â', 'Ä', 'ä', 'Ã', 'ã', 'Å', 'å', 'æ', 'Æ', 'α', 'Δ', 'Λ', 'λ'],
