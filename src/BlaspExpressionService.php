@@ -2,11 +2,13 @@
 
 namespace Blaspsoft\Blasp;
 
+use Exception;
+
 abstract class BlaspExpressionService
 {
     /**
      * Value used as a the separator placeholder.
-     * 
+     *
      * @var string
      */
     const SEPARATOR_PLACEHOLDER = '{!!}';
@@ -61,8 +63,34 @@ abstract class BlaspExpressionService
      */
     protected array $characterExpressions;
 
-    public function __construct()
+    /**
+     * Language the package should use
+     *
+     * @var string|null
+     */
+    protected ?string $chosenLanguage;
+
+    /**
+     * Languages supported by the package
+     *
+     * @var array
+     */
+    protected array $supportedLanguages;
+
+    /**
+     * An array of false positive expressions
+     *
+     * @var array
+     */
+    protected array $falsePositives;
+
+    /**
+     * @throws Exception
+     */
+    public function __construct(?string $language = null)
     {
+        $this->chosenLanguage = $language;
+
         $this->loadConfiguration();
 
         $this->separatorExpression = $this->generateSeparatorExpression();
@@ -70,16 +98,27 @@ abstract class BlaspExpressionService
         $this->characterExpressions = $this->generateSubstitutionExpression();
 
         $this->generateProfanityExpressionArray();
+
+        $this->generateFalsePositiveExpressionArray();
     }
 
     /**
      * Load Profanities, Separators and Substitutions
      * from config file.
      *
+     * @throws Exception
      */
-    private function loadConfiguration()
+    private function loadConfiguration(): void
     {
-        $this->profanities = config('blasp.profanities');
+        $this->supportedLanguages = config('blasp.languages');
+
+        if (empty($this->chosenLanguage)) {
+            $this->chosenLanguage = config('blasp.default_language');
+        }
+
+        $this->validateChosenLanguage();
+
+        $this->profanities = config('blasp.profanities')[$this->chosenLanguage];
         $this->separators = config('blasp.separators');
         $this->substitutions = config('blasp.substitutions');
     }
@@ -129,7 +168,7 @@ abstract class BlaspExpressionService
      * and order the array longest to shortest.
      *
      */
-    private function generateProfanityExpressionArray()
+    private function generateProfanityExpressionArray(): void
     {
         $profanityCount = count($this->profanities);
 
@@ -141,7 +180,7 @@ abstract class BlaspExpressionService
 
     /**
      * Generate a regex expression foreach profanity.
-     * 
+     *
      * @param $profanity
      * @return string
      */
@@ -154,5 +193,26 @@ abstract class BlaspExpressionService
         $expression = '/' . $expression . '(?:s?)\b/i';
 
         return $expression;
+    }
+
+    /**
+     * Generate an array of false positive expressions.
+     *
+     * @return void
+     */
+    private function generateFalsePositiveExpressionArray(): void
+    {
+        $this->falsePositives = array_map('strtolower', config('blasp.false_positives')[$this->chosenLanguage]);
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    private function validateChosenLanguage(): void
+    {
+        if (!in_array($this->chosenLanguage, $this->supportedLanguages, true)) {
+            throw new Exception('Unsupported language.');
+        }
     }
 }

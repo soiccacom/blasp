@@ -17,8 +17,12 @@ class ServiceProvider extends BaseServiceProvider
             ], 'blasp-config');
         }
 
-        app('validator')->extend('blasp_check', function ($attribute, $value, $parameters, $validator,) {
-            return ! app('blasp')->check($value)->hasProfanity;
+        app('validator')->extend('blasp_check', function($attribute, $value, $parameters, $validator) {
+            $language = $parameters[0] ?? null;
+
+            $blaspService = new BlaspService($language);
+
+            return !$blaspService->check($value)->hasProfanity();
         }, 'The :attribute contains profanity.');
     }
 
@@ -30,7 +34,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'blasp');
 
         $this->app->bind('blasp', function () {
-            return new \Blaspsoft\Blasp\BlaspService();
+            return new BlaspService();
         });
     }
 }
