@@ -2,6 +2,8 @@
 
 namespace Blaspsoft\Blasp;
 
+use Blaspsoft\Blasp\Abstracts\StringNormalizer;
+use Blaspsoft\Blasp\Normalizers\Normalize;
 use Exception;
 
 class BlaspService extends BlaspExpressionService
@@ -48,7 +50,7 @@ class BlaspService extends BlaspExpressionService
      *
      * @var string|null
      */
-    protected ?string $language;
+    protected ?string $chosenLanguage;
 
     /**
      * Profanity detector instance.
@@ -70,13 +72,12 @@ class BlaspService extends BlaspExpressionService
      */
     public function __construct(?string $language = null)
     {
-        $this->language = $language;
 
         parent::__construct($language);
 
         $this->profanityDetector = new ProfanityDetector($this->profanityExpressions, $this->falsePositives);
 
-        $this->stringNormalizer = new StringNormalizer($language);
+        $this->stringNormalizer =  Normalize::getLanguageNormalizerInstance($this->chosenLanguage);
     }
 
     /**

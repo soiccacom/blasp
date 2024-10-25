@@ -84,6 +84,9 @@ abstract class BlaspExpressionService
      */
     protected array $falsePositives;
 
+    /**
+     * @throws Exception
+     */
     public function __construct(?string $language = null)
     {
         $this->chosenLanguage = $language;
