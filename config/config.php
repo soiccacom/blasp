@@ -418,6 +418,7 @@ return [
             'crotchjockey',
             'crotchmonkey',
             'crotchrot',
+            'cuck',
             'cum',
             'cumbubble',
             'cumdumpster',
