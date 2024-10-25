@@ -129,7 +129,6 @@ abstract class BlaspExpressionService
     private function generateSeparatorExpression(): string
     {
         return $this->generateEscapedExpression($this->separators, $this->escapedSeparatorCharacters);
-        return !empty($separatorExpression) ? $separatorExpression . '?' : '';
     }
 
     /**
