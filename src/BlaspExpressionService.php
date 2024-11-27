@@ -118,7 +118,7 @@ abstract class BlaspExpressionService
 
         $this->validateChosenLanguage();
 
-        $this->profanities = config('blasp.profanities')[$this->chosenLanguage];
+        $this->profanities = config('blasp.profanities')[$this->chosenLanguage];  
         $this->separators = config('blasp.separators');
         $this->substitutions = config('blasp.substitutions');
     }
@@ -157,6 +157,7 @@ abstract class BlaspExpressionService
         $regex = $escapedCharacters;
 
         foreach ($characters as $character) {
+
             $regex[] = preg_quote($character, '/');
         }
 
@@ -190,8 +191,9 @@ abstract class BlaspExpressionService
 
         $expression = str_replace(self::SEPARATOR_PLACEHOLDER, $this->separatorExpression, $expression);
 
-        $expression = '/' . $expression . '(?:s?)\b/i';
-
+        // Allow for non-word characters or spaces around the profanity
+        $expression = '/' . $expression . '/i';
+        
         return $expression;
     }
 

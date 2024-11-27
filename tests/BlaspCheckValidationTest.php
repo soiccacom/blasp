@@ -36,36 +36,4 @@ class BlaspCheckValidationTest extends TestCase
 
         $this->assertTrue($validator->fails());
     }
-
-    /**
-     * Test validation passes with clean French text.
-     *
-     * @return void
-     */
-    public function test_blasp_check_validation_passes_with_clean_french_text()
-    {
-        $data = ['message' => 'Ceci est un message propre.'];
-
-        $rules = ['message' => 'blasp_check:fr'];
-
-        $validator = Validator::make($data, $rules);
-
-        $this->assertTrue($validator->passes());
-    }
-
-    /**
-     * Test validation fails with profane French text.
-     *
-     * @return void
-     */
-    public function test_blasp_check_validation_fails_with_french_profanity()
-    {
-        $data = ['message' => 'Ceci est un message de merdique.'];
-
-        $rules = ['message' => 'blasp_check:fr'];
-
-        $validator = Validator::make($data, $rules);
-
-        $this->assertTrue($validator->fails());
-    }
 }

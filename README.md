@@ -32,13 +32,7 @@ use Blaspsoft\Blasp\Facades\Blasp;
 $sentence = 'This is a fucking shit sentence';
 $check = Blasp::check($sentence);
 ```
-you can also change the default language to french
-```php
-use Blaspsoft\Blasp\Facades\Blasp;
 
-$sentence = 'Cette phrase est merdique';
-$check = Blasp::check($sentence, 'fr');
-```
 The returned object will contain the following properties:
 
 - **sourceString**: The original string you passed.
@@ -82,15 +76,8 @@ $request->merge(['sentence' => 'This is f u c k 1 n g awesome!']);
 $validated = $request->validate([
     'sentence' => ['blasp_check'],
 ]);
+```
 
-// If the sentence contains profanities, validation will fail.
-```
-or for french
-```php
-$validated = $request->validate([
-    'sentence' => ['blasp_check:fr'],
-]);
-```
 ### Configuration
 
 Blasp uses a configuration file (`config/blasp.php`) to manage the list of profanities, separators, and substitutions. You can publish the configuration file using the following Artisan command:
