@@ -22,7 +22,7 @@ return [
     |
     |
     */
-    'languages' => ['en', 'fr'],
+    'languages' => ['en'],
 
     /*
     |--------------------------------------------------------------------------
@@ -95,7 +95,7 @@ return [
         '/p/' => ['p', 'ρ', 'Ρ', '¶', 'þ'],
         '/q/' => ['q'],
         '/r/' => ['r', '®'],
-        '/s/' => ['s', '5', '$', '§', 'ß', 'Ś', 'ś', 'Š', 'š'],
+        '/s/' => ['s', '5', '\$', '§', 'ß', 'Ś', 'ś', 'Š', 'š'],
         '/t/' => ['t', 'Τ', 'τ'],
         '/u/' => ['u', 'υ', 'µ', 'û', 'ü', 'ù', 'ú', 'ū', 'Û', 'Ü', 'Ù', 'Ú', 'Ū'],
         '/v/' => ['v', 'υ', 'ν'],
@@ -136,15 +136,8 @@ return [
             'flicker',
             'analyst',
             'cocktail',
+            'musicals hit',
         ],
-        'fr' => [
-            'passeur',
-            'classe',
-            'passage',
-            'assumer',
-            'passant',
-            'bassiste',
-        ]
     ],
 
 
@@ -462,7 +455,6 @@ return [
             'cuntass',
             'cunteyed',
             'cuntface',
-            'cuntfuck',
             'cuntfucker',
             'cunthole',
             'cuntlick',
@@ -637,7 +629,6 @@ return [
             'fuckbutt',
             'fuckbutter',
             'fucked',
-            'fuckedup',
             'fucker',
             'fuckers',
             'fuckersucker',
@@ -652,7 +643,6 @@ return [
             'fuckina',
             'fucking',
             'fuckingbitch',
-            'fuckingcunt',
             'fuckinnuts',
             'fuckinright',
             'fuckit',
@@ -742,7 +732,7 @@ return [
             'hardon',
             'headfuck',
             'heeb',
-            'hells',
+            'hell',
             'herpes',
             'hijacker',
             'hijacking',
@@ -782,7 +772,6 @@ return [
             'incest',
             'insest',
             'internet wife',
-            'intheass',
             'inthebuff',
             'jackass',
             'jackoff',
@@ -1461,37 +1450,5 @@ return [
             'zipperhea',
             'zipper head',
         ],
-        'fr' => [
-            'con',
-            'connard',
-            'connasse',
-            'merde',
-            'merdique',
-            'putain',
-            'enculé',
-            'salope',
-            'batard',
-            'bordel',
-            'fils de pute',
-            'pute',
-            'cul',
-            'abruti',
-            'crétin',
-            'imbécile',
-            'ordure',
-            'débile',
-            'dégénéré',
-            'foutre',
-            'chiant',
-            'chiotte',
-            'bouffon',
-            'gros con',
-            'pédé',
-            'tapette',
-            'bite',
-            'couille',
-            'enfoiré',
-            'trou du cul',
-        ]
     ],
 ];

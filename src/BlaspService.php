@@ -2,9 +2,9 @@
 
 namespace Blaspsoft\Blasp;
 
-use Blaspsoft\Blasp\Abstracts\StringNormalizer;
-use Blaspsoft\Blasp\Normalizers\Normalize;
 use Exception;
+use Blaspsoft\Blasp\Normalizers\Normalize;
+use Blaspsoft\Blasp\Abstracts\StringNormalizer;
 
 class BlaspService extends BlaspExpressionService
 {
